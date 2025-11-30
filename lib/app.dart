@@ -13,18 +13,18 @@ class GuessKaroApp extends StatefulWidget {
 }
 
 class _GuessKaroAppState extends State<GuessKaroApp> {
-  late final GoRouter _router;
+  GoRouter? _router;
 
   @override
   void initState() {
     super.initState();
-    _router = createRouter();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<GameState>(
       builder: (context, gameState, _) {
+        final router = _router ??= createRouter(gameState);
         final theme = ThemeData(
           brightness: gameState.highContrast ? Brightness.dark : Brightness.light,
           colorSchemeSeed: Colors.teal,
@@ -37,7 +37,7 @@ class _GuessKaroAppState extends State<GuessKaroApp> {
         return MaterialApp.router(
           title: 'GuessKaro',
           theme: theme,
-          routerConfig: _router,
+          routerConfig: router,
           builder: (context, child) {
             final media = MediaQuery.of(context);
             final scale = gameState.largeText ? 1.2 : 1.0;
