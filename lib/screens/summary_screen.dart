@@ -35,20 +35,16 @@ class SummaryScreen extends StatelessWidget {
                   Expanded(
                     child: ListView(
                       children: [
-                        const Text('Correct guesses'),
-                        Wrap(
-                          spacing: 8,
-                          children: result.correct
-                              .map((word) => Chip(label: Text(word)))
-                              .toList(),
+                        _WordSection(
+                          title: 'Correct (${result.correct.length})',
+                          words: result.correct,
+                          emptyLabel: 'No correct guesses this round.',
                         ),
-                        const SizedBox(height: 16),
-                        const Text('Passed words'),
-                        Wrap(
-                          spacing: 8,
-                          children: result.passed
-                              .map((word) => Chip(label: Text(word)))
-                              .toList(),
+                        const SizedBox(height: 12),
+                        _WordSection(
+                          title: 'Passed (${result.passed.length})',
+                          words: result.passed,
+                          emptyLabel: 'No passes this round.',
                         ),
                       ],
                     ),
@@ -71,6 +67,49 @@ class SummaryScreen extends StatelessWidget {
                   ),
                 ],
               ),
+      ),
+    );
+  }
+}
+
+class _WordSection extends StatelessWidget {
+  const _WordSection({
+    required this.title,
+    required this.words,
+    required this.emptyLabel,
+  });
+
+  final String title;
+  final List<String> words;
+  final String emptyLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            if (words.isEmpty)
+              Text(
+                emptyLabel,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.grey),
+              )
+            else
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: words.map((word) => Chip(label: Text(word))).toList(),
+              ),
+          ],
+        ),
       ),
     );
   }
